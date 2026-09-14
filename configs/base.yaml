@@ -1,0 +1,61 @@
+# configs/base.yaml
+# Shared configuration for all experiments.
+# Experiment-specific configs (prior.yaml, part1.yaml) extend this file.
+
+# ── Data ──────────────────────────────────────────────────────────────
+data:
+  fs: 500                        # sampling frequency (Hz) — non-negotiable
+  window_seconds: 8.0            # window length in seconds
+  window_samples: 4000           # = fs * window_seconds (500 * 8)
+  lead: "I"                      # ECG lead for prior training (Lead II = index 1 in PTB-XL)
+  ptbxl_version: "1.0.3"        # PhysioNet PTB-XL version string
+  ptbxl_pn_dir: "ptb-xl/1.0.3"  # wfdb pn_dir argument for PhysioNet streaming
+  vitaldb_fs: 500                # VitalDB native rate (already 500 Hz)
+
+# ── Model ─────────────────────────────────────────────────────────────
+model:
+  # Diffusion prior
+  diff_T: 1000                   # diffusion timesteps
+  diff_schedule: "cosine"        # "cosine" or "linear"
+  pred_type: "x0"                # "x0" or "eps"
+  base_ch: 64                    # U-Net stem width
+  time_dim: 128                  # timestep embedding dimension
+  n_res: 2                       # residual blocks per U-Net stage
+
+  # Bootstrap ensemble (pending advisor confirmation)
+  bootstrap_B: 5                 # number of ensemble members — STUB
+
+  # Noise covariance
+  cov_mode: "isotropic"          # "isotropic" (Part 1) or "diagonal" (Part 2)
+  init_log_var: 0.0              # initial log σ²
+
+  # Likelihood forward operator (Part 1 fixed values)
+  kernel_sigma: 10.0             # Gaussian kernel σ in samples
+  kernel_size: 61                # kernel length (odd)
+
+# ── VI ────────────────────────────────────────────────────────────────
+vi:
+  phi_dim: 4                     # |φ| in Part 1 minimal set: {τ, a, b, σ²}
+  n_phi_samples: 8               # IS samples per ELBO estimate
+  lr_lambda: 1.0e-3              # learning rate for λ
+  n_vi_steps: 5                  # VI gradient steps per outer iteration
+  beta_kl: 1.0                   # KL weight in ELBO
+
+# ── MALA ──────────────────────────────────────────────────────────────
+mala:
+  step_size_x: 1.0e-3            # Langevin step size for X
+  step_size_z: 1.0e-3            # Langevin step size for Z
+  n_warmup: 200                  # warmup steps (step-size adaptation)
+  n_samples: 500                 # posterior samples to collect (after warmup)
+  thin: 5                        # thinning factor
+  t_diffusion: 0                 # diffusion timestep at MCMC time
+  target_accept: 0.574           # Langevin optimal acceptance rate
+
+# ── Evaluation ────────────────────────────────────────────────────────
+eval:
+  coverage_levels: [0.50, 0.80, 0.90, 0.95]   # nominal coverage levels
+  features: ["RR", "QRS", "QTc"]               # clinical features
+  n_bootstrap_ci: 1000           # bootstrap replicates for metric CIs
+
+# ── Reproducibility ───────────────────────────────────────────────────
+seed: 42
