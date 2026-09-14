@@ -231,4 +231,4 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 ECG prior trained on [PTB-XL](https://physionet.org/content/ptb-xl/1.0.3/) (Wagner et al., 2020).  
 Real-data evaluation on [VitalDB](https://vitaldb.net) (Lee et al., 2022).  
-Baselines: [CardioGAN]([https://github.com/pritamqu/ppg2ecg](https://arxiv.org/abs/2010.00104)) (Sarkar & Etemad, 2021), [RDDM]([https://github.com/shome-g/rddm](https://arxiv.org/abs/2308.13568)) (Shome et al., 2024).
+Baselines: [CardioGAN](https://arxiv.org/abs/2010.00104) (Sarkar & Etemad, 2021), [RDDM](https://arxiv.org/abs/2308.13568) (Shome et al., 2024).
