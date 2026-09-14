@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+
+# Mac
+.DS_Store
+
+# Data
+experiments/part1/checkpoints/
+experiments/part1/results/
+experiments/part1/synthetic_data/
+data/ptbxl/
